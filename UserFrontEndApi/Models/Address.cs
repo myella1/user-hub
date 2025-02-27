@@ -1,4 +1,6 @@
-﻿namespace FrontEndApi.Models
+﻿using System.Text.Json.Serialization;
+
+namespace FrontEndApi.Models
 {
     public class Address
     {
@@ -13,7 +15,7 @@
     }
     public enum AddressType
     {
-        Billing,
+        Billing, 
         Shipping
     }
 }

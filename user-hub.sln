@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserApi", "userApi\UserApi.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddressApi", "AddressApi\AddressApi.csproj", "{9079D085-2A1B-491C-9314-5BCC3AE9C167}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrontEndApi", "UserFrontEndApi\FrontEndApi.csproj", "{C7883ABF-05ED-4D00-8904-7FD62C9E3C5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserFrontEndApi", "UserFrontEndApi\UserFrontEndApi.csproj", "{C7883ABF-05ED-4D00-8904-7FD62C9E3C5F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserApiClient", "BlazorApp1\UserApiClient.csproj", "{59BCFE5A-9F70-4FDC-BEC8-AAE9C109B190}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserApiClient", "UserApiClient\UserApiClient.csproj", "{7367E9EF-6F95-447B-8140-DC2B2BCA5743}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{C7883ABF-05ED-4D00-8904-7FD62C9E3C5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7883ABF-05ED-4D00-8904-7FD62C9E3C5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7883ABF-05ED-4D00-8904-7FD62C9E3C5F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{59BCFE5A-9F70-4FDC-BEC8-AAE9C109B190}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59BCFE5A-9F70-4FDC-BEC8-AAE9C109B190}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{59BCFE5A-9F70-4FDC-BEC8-AAE9C109B190}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{59BCFE5A-9F70-4FDC-BEC8-AAE9C109B190}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7367E9EF-6F95-447B-8140-DC2B2BCA5743}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7367E9EF-6F95-447B-8140-DC2B2BCA5743}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7367E9EF-6F95-447B-8140-DC2B2BCA5743}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7367E9EF-6F95-447B-8140-DC2B2BCA5743}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

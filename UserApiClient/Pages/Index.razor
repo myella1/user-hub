@@ -6,22 +6,20 @@
 <h3>Dashboard</h3>
 
 <button class="btn btn-primary" @onclick="LoadData">Refresh Data</button>
-
 @if (loading)
 {
     <p>Loading data...</p>
 }
 else
 {
-    <h4>Users:</h4>
+    <h2>Users:</h2>
     <ul>
         @foreach (var user in users)
         {
             <li>@user.FirstName @user.LastName, @user.EmailAddress (ID: @user.UserId)</li>
         }
     </ul>
-
-    <h4>Addresses:</h4>
+    <h2>Addresses:</h2>
     <ul>
         @foreach (var address in addresses)
         {
@@ -29,11 +27,8 @@ else
         }
     </ul>
 }
+@code {
 
-
-
-@code 
-{
     private bool loading = true;
     private IEnumerable<User>? users = new List<User>();
     private IEnumerable<Address>? addresses = new List<Address>();
@@ -42,7 +37,7 @@ else
     {
         await LoadData();
     }
-    
+
     private async Task LoadData()
     {
         loading = true;
@@ -52,3 +47,10 @@ else
         loading = false;
     }
 }
+
+
+
+
+
+
+

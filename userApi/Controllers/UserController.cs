@@ -10,7 +10,6 @@ namespace userApi.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
@@ -62,7 +61,7 @@ namespace userApi.Controllers
         ///Creates or updates user resource using the "POST" pattern.
         /// </summary>
         [HttpPost]
-        public async Task<IEnumerable<User>?> CreateUser([FromBody] User user)
+        public async Task<User?> CreateUser([FromBody] User user)
         {
             try
             {

@@ -15,20 +15,22 @@ namespace AddressApi.Services
         {
             _logger = logger;
         }
-        public async Task<IEnumerable<Address>> GetAddress(int userId)
+        //public async Task<IEnumerable<Address>> GetAddress(int userId)
+        public async Task<IEnumerable<Address>> GetAddress()
         {
-            var loggingScope = new Dictionary<string, object>
-            {
-                ["UserId"] = userId
-            };
-            using var _ = _logger.BeginScope(loggingScope);
-            _logger.LogInformation($"Retrieving address for the user: {userId}");
+            //var loggingScope = new Dictionary<string, object>
+            //{
+            //    ["UserId"] = userId
+            //};
+            //using var _ = _logger.BeginScope(loggingScope);
+            //_logger.LogInformation($"Retrieving address for the user: {userId}");
             
             await Task.Delay(500);
-            return _addresses.Where(x => x.UserId == userId).AsEnumerable();
+            return _addresses;
+                //.Where(x => x.UserId == userId).AsEnumerable();
         }
 
-        public async Task<IEnumerable<Address>> CreateAddress(Address address)
+        public async Task<Address> CreateAddress(Address address)
         {
             var loggingScope = new Dictionary<string, object>
             {
@@ -39,7 +41,7 @@ namespace AddressApi.Services
 
             await Task.Delay(1000);
             _addresses.Add(address);
-            return _addresses.Where(x => x.UserId == address.UserId).AsEnumerable();
+            return address;
         }
     }
 }

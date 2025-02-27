@@ -32,17 +32,17 @@ namespace FrontEndApi.Controllers
         }
 
         [HttpPost("user")]
-        public async Task<IActionResult> CreateUser([FromBody] User user)
+        public async Task<User?> CreateUser([FromBody] User user)
         {
             var createdUser = await _gatewayService.CreateUserAsync(user);
-            return CreatedAtAction(nameof(GetData), new { id = createdUser?.UserId }, createdUser);
+            return createdUser;
         }
 
         [HttpPost("address")]
-        public async Task<IActionResult> CreateAddress([FromBody] Address address)
+        public async Task<Address?> CreateAddress([FromBody] Address address)
         {
             var createdAddress = await _gatewayService.CreateAddressAsync(address);
-            return CreatedAtAction(nameof(GetData), new { id = createdAddress?.UserId }, createdAddress);
+            return createdAddress;
         }
     }
 }

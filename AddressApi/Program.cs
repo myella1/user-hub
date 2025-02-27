@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Address Api service", Version = "v1" });
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
 builder.Services.AddScoped<IAddressService, AddressService>();
 var app = builder.Build();
 

@@ -5,7 +5,7 @@ namespace AddressApi.Services
 {
     public interface IAddressService
     {
-        Task<IEnumerable<Address>> GetAddress(int userId);
-        Task<IEnumerable<Address>> CreateAddress([FromBody] Address address);
+        Task<IEnumerable<Address>> GetAddress();
+        Task<Address> CreateAddress([FromBody] Address address);
     }
 }
