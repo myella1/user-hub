@@ -1,0 +1,54 @@
+﻿@page "/"
+@using UserApiClient.Models
+@using UserApiClient.Services
+@inject ApiService ApiService
+
+<h3>Dashboard</h3>
+
+<button class="btn btn-primary" @onclick="LoadData">Refresh Data</button>
+
+@if (loading)
+{
+    <p>Loading data...</p>
+}
+else
+{
+    <h4>Users:</h4>
+    <ul>
+        @foreach (var user in users)
+        {
+            <li>@user.FirstName @user.LastName, @user.EmailAddress (ID: @user.UserId)</li>
+        }
+    </ul>
+
+    <h4>Addresses:</h4>
+    <ul>
+        @foreach (var address in addresses)
+        {
+            <li>@address.Address1, @address.Address2, @address.City, @address.State, @address.PostalCode, @address.AddressType, (ID: @address.AddressId)</li>
+        }
+    </ul>
+}
+
+
+
+@code 
+{
+    private bool loading = true;
+    private IEnumerable<User>? users = new List<User>();
+    private IEnumerable<Address>? addresses = new List<Address>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+    
+    private async Task LoadData()
+    {
+        loading = true;
+        var result = await ApiService.GetDataAsync();
+        users = result.Users;
+        addresses = result.Addresses;
+        loading = false;
+    }
+}

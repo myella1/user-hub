@@ -1,0 +1,29 @@
+﻿@page "/adduser"
+@using UserApiClient.Services
+@using UserApiClient.Models
+@inject ApiService ApiService
+@inject NavigationManager NavigationManager
+
+<h3>Add New User</h3>
+
+<input @bind="newUser.FirstName" placeholder="Enter user name" />
+<button class="btn btn-primary" @onclick="AddUser1">Submit</button>
+
+@if (message != null)
+{
+    <p>@message</p>
+}
+
+@code
+{
+    private User newUser = new User() { FirstName = "MJ", LastName = "Yella", EmailAddress="mjyella@gmail.com" };
+    private string message=string.Empty;
+
+    private async Task AddUser1()
+    {
+        var addedUser = await ApiService.AddUserAsync(newUser);
+        message = $"User {addedUser?.FirstName}, {addedUser?.LastName} added with ID {addedUser?.UserId}.";
+        // Optionally navigate back to dashboard:
+        // NavigationManager.NavigateTo("/");
+    }
+}
