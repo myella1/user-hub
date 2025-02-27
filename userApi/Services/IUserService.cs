@@ -7,6 +7,6 @@ namespace UserApi.Services
     {
         Task<IEnumerable<User>> GetUsers();
         Task<User> GetUser(int id);
-        Task<IEnumerable<User>> CreateUser([FromBody] User user);
+        Task<User> CreateUser([FromBody] User user);
     }
 }

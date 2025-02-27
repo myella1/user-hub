@@ -1,18 +1,25 @@
 ﻿using System.Net.Http.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using UserApiClient.Models;
 
 namespace UserApiClient.Services
 {
-    public class ApiService
+    public class ApiService : IApiService
     {
-        private readonly HttpClient _httpClient;
+        private readonly HttpClient _httpClient; 
+        private readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true,  // Ensure property names are case-insensitive
+            Converters = { new JsonStringEnumConverter() } // Convert enums from strings
+        };
         public ApiService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
         public async Task<(IEnumerable<User>? Users, IEnumerable<Address>? Addresses)> GetDataAsync()
         {
-            var response = await _httpClient.GetFromJsonAsync<GatewayResponse>("api/gateway");
+            var response = await _httpClient.GetFromJsonAsync<GatewayResponse>("api/gateway", _jsonOptions);
             return (response?.Users, response?.Addresses);
         }
 
@@ -20,7 +27,7 @@ namespace UserApiClient.Services
         {
             var response = await _httpClient.PostAsJsonAsync("api/gateway/user", user);
             response.EnsureSuccessStatusCode();
-            var userResponse = await response.Content.ReadFromJsonAsync<User>();
+            var userResponse = await response.Content.ReadFromJsonAsync<User>(_jsonOptions);
             return userResponse;
         }
 
@@ -28,7 +35,7 @@ namespace UserApiClient.Services
         {
             var response = await _httpClient.PostAsJsonAsync("api/gateway/address", address);
             response.EnsureSuccessStatusCode();
-            var addressResponse = await response.Content.ReadFromJsonAsync<Address>();
+            var addressResponse = await response.Content.ReadFromJsonAsync<Address>(_jsonOptions);
             return addressResponse;
         }
     }

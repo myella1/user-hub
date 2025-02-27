@@ -5,7 +5,7 @@ namespace UserApi.Services
 {
     public class UserService : IUserService
     {
-        private readonly ILogger<UserService> _logger; 
+        private readonly ILogger<UserService> _logger;
         private static List<User> _users = new() {
                                                     new User { UserId = 1, FirstName = "Mike", LastName = "Smith", MiddleName = "N", EmailAddress = "MikeSmith@gmail.com" },
                                                     new User { UserId = 2, FirstName="Sarah", LastName="Jane", MiddleName="A", EmailAddress="SarahJane@gmail.com" }
@@ -35,7 +35,7 @@ namespace UserApi.Services
             var user = _users.Where(x => x.UserId == userId).FirstOrDefault();
             return user!;
         }
-        public async Task<IEnumerable<User>> CreateUser([FromBody] User user)
+        public async Task<User> CreateUser([FromBody] User user)
         {
             var loggingScope = new Dictionary<string, object>
             {
@@ -44,13 +44,10 @@ namespace UserApi.Services
             using var _ = _logger.BeginScope(loggingScope);
             _logger.LogInformation($"Created user : {user.UserId}");
 
-           
-           
-                await Task.Delay(1000);
-                _users.Add(user);
-            
+            await Task.Delay(1000);
+            _users.Add(user);
 
-            return _users.AsEnumerable();
+            return user;
         }
     }
 }

@@ -7,7 +7,6 @@ namespace AddressApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class AddressController : ControllerBase
     {
         private readonly ILogger<AddressController> _logger;
@@ -19,12 +18,12 @@ namespace AddressApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Address>?> GetAddress(int userId)
+        public async Task<IEnumerable<Address>?> GetAddress()
         {
             try
             {
                 await Task.Delay(500);
-                return await _addressService.GetAddress(userId);
+                return await _addressService.GetAddress();
             }
             catch(Exception ex) 
             {
@@ -34,7 +33,7 @@ namespace AddressApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IEnumerable<Address>?> CreateAddress([FromBody] Address address)
+        public async Task<Address?> CreateAddress([FromBody] Address address)
         {
             try
             {
