@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Manjusha.Y\\source\\repos\\user-hub\\AddressApi\\AddressApi.csproj": {}
+    "C:\\user-hub\\AddressApi\\AddressApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Manjusha.Y\\source\\repos\\user-hub\\AddressApi\\AddressApi.csproj": {
+    "C:\\user-hub\\AddressApi\\AddressApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Manjusha.Y\\source\\repos\\user-hub\\AddressApi\\AddressApi.csproj",
+        "projectUniqueName": "C:\\user-hub\\AddressApi\\AddressApi.csproj",
         "projectName": "AddressApi",
-        "projectPath": "C:\\Users\\Manjusha.Y\\source\\repos\\user-hub\\AddressApi\\AddressApi.csproj",
+        "projectPath": "C:\\user-hub\\AddressApi\\AddressApi.csproj",
         "packagesPath": "C:\\Users\\Manjusha.Y\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Manjusha.Y\\source\\repos\\user-hub\\AddressApi\\obj\\",
+        "outputPath": "C:\\user-hub\\AddressApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
