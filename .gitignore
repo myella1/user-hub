@@ -1,16 +1,98 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
-/.vs/ProjectSettings.json
-/.vs/slnx.sqlite
-/.vs/user-hub/config/applicationhost.config
-/.vs/user-hub/DesignTimeBuild/.dtbcache.v2
-/.vs/user-hub/FileContentIndex/4101cdbe-46ee-4e44-a4cb-3c9685384cb4.vsidx
-/.vs/user-hub/FileContentIndex/b5d6bac0-423b-42f9-86a7-cc30cc046240.vsidx
-/.vs/user-hub/FileContentIndex/e4e0e081-7d59-45e2-9239-a26abc196c2c.vsidx
-/.vs/user-hub/FileContentIndex/f6632783-e95f-49e9-8eed-193f6b15636a.vsidx
-/.vs/user-hub/FileContentIndex/f7fccc63-c3ab-4ee3-8f65-78897e8dbcd9.vsidx
-/.vs/user-hub/v17/.suo
-/.vs/user-hub/v17/.wsuo
-/.vs/VSWorkspaceState.json
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
+
+# Mono auto generated files
+mono_crash.*
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+# Uncomment if you have tasks that create the project's static files in wwwroot
+#wwwroot/
+
+# Visual Studio 2017 auto generated files
+Generated\ Files/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# Build Results of an ATL Project
+[Dd]ebugPS/
+[Rr]eleasePS/
+dlldata.c
+
+# Benchmark Results
+BenchmarkDotNet.Artifacts/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# StyleCop
+StyleCopReport.xml
+
+# Files built by Visual Studio
+*_i.c
+*_p.c
+*_h.h
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.log
+*.tlog
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
