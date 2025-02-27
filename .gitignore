@@ -96,3 +96,4 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+/userApi/bin/Debug/net7.0/appsettings.Development.json

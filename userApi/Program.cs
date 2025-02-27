@@ -1,6 +1,6 @@
 using Microsoft.OpenApi.Models;
-using userApi.Controllers;
 using UserApi.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,11 +12,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddScoped<IUserService, UserService>();
-//builder.Services.AddControllersWithViews(options =>
-//{
-//    options.Filters.Add(new Microsoft.AspNetCore.Mvc.ValidateAntiForgeryTokenAttribute());
-//});
-//builder.Services.AddHealthChecks();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

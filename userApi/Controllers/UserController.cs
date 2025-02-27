@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using userApi.Models;
 using UserApi.Services;
 
@@ -9,6 +10,7 @@ namespace userApi.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
@@ -24,30 +26,55 @@ namespace userApi.Controllers
         ///Retrieves all the users using the "Get" pattern.
         /// </summary>
         [HttpGet]
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<User>?> GetUsers()
         {
-            await Task.Delay(500);
-            return await _userService.GetUsers();
+            try
+            {
+                await Task.Delay(500);
+                return await _userService.GetUsers();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
         }
 
         /// <summary>
         ///Retrieves specific user by the user id using the "Get" pattern.
         /// </summary>
         [HttpGet("{id}")]
-        public async Task<User> GetUser(int id)
+        public async Task<User?> GetUser(int id)
         {
-            await Task.Delay(1000);
-            return await _userService.GetUser(id);
+            try
+            {
+                await Task.Delay(1000);
+                return await _userService.GetUser(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
         }
 
         /// <summary>
         ///Creates or updates user resource using the "POST" pattern.
         /// </summary>
         [HttpPost]
-        public async Task<IEnumerable<User>> CreateUser([FromBody] User user)
+        public async Task<IEnumerable<User>?> CreateUser([FromBody] User user)
         {
-            await Task.Delay(1000);
-            return await _userService.CreateUser(user);
+            try
+            {
+                await Task.Delay(1000);
+                return await _userService.CreateUser(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+
         }
     }
 }
