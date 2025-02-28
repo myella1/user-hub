@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FrontEndApi.Models
+namespace UserGatewayApi.Models
 {
     public class Address
     {

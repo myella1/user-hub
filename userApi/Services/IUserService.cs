@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using userApi.Models;
+using UserApi.Models;
 
 namespace UserApi.Services
 {
     public interface IUserService
     {
-        Task<IEnumerable<User>> GetUsers();
-        Task<User> GetUser(int id);
-        Task<User> CreateUser([FromBody] User user);
+        Task<IEnumerable<User>> GetUsersAsync();
+        Task<User?> GetUserAsync(int userId);
+        Task<User> CreateUserAsync([FromBody] User user);
     }
 }

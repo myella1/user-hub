@@ -1,8 +1,8 @@
-﻿using FrontEndApi.Models;
+﻿using UserGatewayApi.Models;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 
-namespace FrontEndApi.Services
+namespace UserGatewayApi.Services
 {
     public class GatewayService : IGatewayService
     {
