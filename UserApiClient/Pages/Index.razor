@@ -26,7 +26,7 @@ else
     <ul>
         @foreach (var address in addresses)
         {
-            <li>@address.Address1, @address.Address2, @address.City, @address.State, @address.PostalCode, @address.AddressType, (ID: @address.AddressId)</li>
+            <li>@address.Address1,  @(!string.IsNullOrEmpty(@address.Address2) ? @address.Address2 +"," : string.Empty), @address.City, @address.State, @address.PostalCode, @address.AddressType, (ID: @address.AddressId)</li>
         }
     </ul>
 }

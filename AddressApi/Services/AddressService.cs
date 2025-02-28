@@ -18,7 +18,7 @@ namespace AddressApi.Services
         public async Task<IEnumerable<Address>> GetAddressesAsync()
         {
             _logger.LogInformation($"Retrieving all addresses");
-            await Task.Delay(5000);
+            await Task.Delay(1000);
             return _addresses.AsEnumerable();
         }
 

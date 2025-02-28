@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\user-hub\\UserApi\\UserApi.csproj": {}
+    "C:\\user-hub\\userApi\\UserApi.csproj": {}
   },
   "projects": {
-    "C:\\user-hub\\UserApi\\UserApi.csproj": {
+    "C:\\user-hub\\userApi\\UserApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\user-hub\\UserApi\\UserApi.csproj",
+        "projectUniqueName": "C:\\user-hub\\userApi\\UserApi.csproj",
         "projectName": "UserApi",
-        "projectPath": "C:\\user-hub\\UserApi\\UserApi.csproj",
+        "projectPath": "C:\\user-hub\\userApi\\UserApi.csproj",
         "packagesPath": "C:\\Users\\Manjusha.Y\\.nuget\\packages\\",
-        "outputPath": "C:\\user-hub\\UserApi\\obj\\",
+        "outputPath": "C:\\user-hub\\userApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
