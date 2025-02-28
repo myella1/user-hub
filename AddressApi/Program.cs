@@ -1,5 +1,4 @@
 using AddressApi.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 
@@ -12,7 +11,6 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Address Api service", Version = "v1" });
 });
 
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
 builder.Services.AddScoped<IAddressService, AddressService>();
 var app = builder.Build();
 
@@ -28,6 +26,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
 
 app.Run();

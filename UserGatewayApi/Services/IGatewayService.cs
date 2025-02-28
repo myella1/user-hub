@@ -1,6 +1,6 @@
-﻿using FrontEndApi.Models;
+﻿using UserGatewayApi.Models;
 
-namespace FrontEndApi.Services
+namespace UserGatewayApi.Services
 {
     public interface IGatewayService
     {

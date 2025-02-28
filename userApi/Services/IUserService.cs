@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using userApi.Models;
+using UserApi.Models;
 
 namespace UserApi.Services
 {

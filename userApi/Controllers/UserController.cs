@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using userApi.Models;
+using UserApi.Models;
 using UserApi.Services;
 
-namespace userApi.Controllers
+namespace UserApi.Controllers
 {
     /// <summary>
-    /// User Controller
+    /// User Controller - Used to retrieve and create user resource.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -47,7 +47,7 @@ namespace userApi.Controllers
         {
             try
             {
-                await Task.Delay(1000);
+                await Task.Delay(5000);
                 return await _userService.GetUser(id);
             }
             catch (Exception ex)
@@ -58,14 +58,14 @@ namespace userApi.Controllers
         }
 
         /// <summary>
-        ///Creates or updates user resource using the "POST" pattern.
+        ///Creates user resource using the "POST" pattern.
         /// </summary>
         [HttpPost]
         public async Task<User?> CreateUser([FromBody] User user)
         {
             try
             {
-                await Task.Delay(1000);
+                await Task.Delay(15000);
                 return await _userService.CreateUser(user);
             }
             catch (Exception ex)
@@ -73,7 +73,6 @@ namespace userApi.Controllers
                 _logger.LogError(ex, ex.Message);
                 return null;
             }
-
         }
     }
 }

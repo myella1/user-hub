@@ -1,8 +1,8 @@
-﻿using FrontEndApi.Models;
-using FrontEndApi.Services;
+﻿using UserGatewayApi.Models;
+using UserGatewayApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FrontEndApi.Controllers
+namespace UserGatewayApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
