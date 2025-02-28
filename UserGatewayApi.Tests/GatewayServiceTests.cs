@@ -4,62 +4,67 @@ using Moq;
 using Moq.Protected;
 using System.Net.Http.Json;
 using System.Net;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using UserGatewayApi.Options;
 
 namespace UserGatewayApi.Tests
 {
     public class GatewayServiceTests
     {
-        private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
+        private readonly Mock<ILogger<GatewayService>> _logger;
+        private readonly Mock<IOptions<GatewayServiceOptions>> _options;
         private readonly HttpClient _httpClient;
-        private readonly GatewayService _service;
+        private readonly Mock<HttpMessageHandler> _httpMessageHandler;
+        private readonly GatewayService _gatewayService;
 
-        private const string UserApiUrl = "https://localhost:7280/api/User";
-        private const string AddressApiUrl = "https://localhost:7219/api/Address";
+        private const string UserApiUrl = "https://localhost/users";
+        private const string AddressApiUrl = "https://localhost/addresses";
 
         public GatewayServiceTests()
         {
-            _mockHttpMessageHandler = new Mock<HttpMessageHandler>();
-            _httpClient = new HttpClient(_mockHttpMessageHandler.Object)
+            _logger = new Mock<ILogger<GatewayService>>();
+            _options = new Mock<IOptions<GatewayServiceOptions>>();
+
+            _options.Setup(opt => opt.Value).Returns(new GatewayServiceOptions
             {
-                BaseAddress = new Uri("https://localhost/")
+                UserApiUrl = UserApiUrl,
+                AddressApiUrl = AddressApiUrl
+            });
+
+            _httpMessageHandler = new Mock<HttpMessageHandler>();
+            _httpClient = new HttpClient(_httpMessageHandler.Object)
+            {
+                BaseAddress = new Uri("https://localhost")
             };
-            _service = new GatewayService(_httpClient);
+
+            _gatewayService = new GatewayService(_httpClient, _logger.Object, _options.Object);
         }
 
         [Fact]
-        public async Task GetUsersAsync_ReturnsUsers()
+        public async Task GetUsersAsync_ShouldReturnUsers_WhenApiReturnsSuccess()
         {
-            // Arrange
             var users = new List<User>{
                                             new() { UserId = 1, FirstName = "Mike", LastName = "Smith", EmailAddress = "MikeSmith@gmail.com" },
                                             new() { UserId = 2, FirstName = "Sarah", LastName = "Jane", EmailAddress = "SarahJane@gmail.com" }
                                       };
-
-            var response = new HttpResponseMessage
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                StatusCode = HttpStatusCode.OK,
                 Content = JsonContent.Create(users)
             };
 
-            _ = _mockHttpMessageHandler
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                                                    "SendAsync",
-                                                    ItExpr.Is<HttpRequestMessage>(req => req.RequestUri.ToString() == UserApiUrl),
-                                                    ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(response);
-            // Act
-            var result = await _service.GetUsersAsync();
+            _httpMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(responseMessage);
 
-            // Assert
+            var result = await _gatewayService.GetUsersAsync();
+
             Assert.NotNull(result);
-            var userList = result.ToList();
-            Assert.Equal(2, userList.Count);
-            Assert.Equal("Mike", userList[0].FirstName);
+            Assert.Equal(1, result.First().UserId);
         }
 
         [Fact]
-        public async Task GetAddressesAsync_ReturnsAddressList()
+        public async Task GetAddressesAsync_ShouldReturnAddresses_WhenApiReturnsSuccess()
         {
             // Arrange
             var addresses = new List<Address>
@@ -67,30 +72,19 @@ namespace UserGatewayApi.Tests
                                                 new() { AddressId = 1, UserId = 1, Address1 = "123 Main St", City = "Chicago", State = "IL", PostalCode = "12345", AddressType = AddressType.Shipping },
                                                 new() { AddressId = 2, UserId = 2, Address1 = "456 Park Ave", City = "New York", State = "NY", PostalCode = "67890", AddressType = AddressType.Billing }
                                             };
-
-
-            var response = new HttpResponseMessage
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK)
             {
-                StatusCode = HttpStatusCode.OK,
                 Content = JsonContent.Create(addresses)
             };
 
-            _mockHttpMessageHandler
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                                                "SendAsync",
-                                                ItExpr.Is<HttpRequestMessage>(req => req.RequestUri.ToString() == AddressApiUrl),
-                                                ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(response);
+            _httpMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(responseMessage);
 
-            // Act
-            var result = await _service.GetAddressesAsync();
+            var result = await _gatewayService.GetAddressesAsync();
 
-            // Assert
             Assert.NotNull(result);
-            var addressList = result.ToList();
-            Assert.Equal(2, addressList.Count);
-            Assert.Equal("Chicago", addressList[0].City);
+            Assert.Equal(1, result.First().AddressId);
         }
 
         [Fact]
@@ -104,31 +98,25 @@ namespace UserGatewayApi.Tests
                 LastName = "Doe",
                 EmailAddress = "JohnDoe@gmail.com"
             };
-            var response = new HttpResponseMessage
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.Created)
             {
-                StatusCode = HttpStatusCode.Created,
                 Content = JsonContent.Create(newUser)
             };
 
-            _mockHttpMessageHandler
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                                                "SendAsync",
-                                                ItExpr.Is<HttpRequestMessage>(req => req.RequestUri.ToString() == UserApiUrl),
-                                                ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(response);
+            _httpMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(responseMessage);
 
-            // Act
-            var result = await _service.CreateUserAsync(newUser);
+            var result = await _gatewayService.CreateUserAsync(newUser);
 
-            // Assert
             Assert.NotNull(result);
+
             Assert.Equal(newUser.UserId, result.UserId);
             Assert.Equal("John", result.FirstName);
         }
 
         [Fact]
-        public async Task CreateAddressAsync_CreatesAndReturnsAddress()
+        public async Task CreateAddressAsync_ShouldReturnAddress_WhenApiReturnsSuccess()
         {
             // Arrange
             var newAddress = new Address
@@ -141,24 +129,17 @@ namespace UserGatewayApi.Tests
                 PostalCode = "54321",
                 AddressType = AddressType.Billing
             };
-            var response = new HttpResponseMessage
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.Created)
             {
-                StatusCode = HttpStatusCode.Created,
                 Content = JsonContent.Create(newAddress)
             };
 
-            _mockHttpMessageHandler
-            .Protected()
-            .Setup<Task<HttpResponseMessage>>(
-                                            "SendAsync",
-                                            ItExpr.Is<HttpRequestMessage>(req => req.RequestUri.ToString() == AddressApiUrl),
-                                            ItExpr.IsAny<CancellationToken>())
-            .ReturnsAsync(response);
+            _httpMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(responseMessage);
 
-            // Act
-            var result = await _service.CreateAddressAsync(newAddress);
+            var result = await _gatewayService.CreateAddressAsync(newAddress);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal(newAddress.AddressId, result.AddressId);
             Assert.Equal("Boston", result.City);

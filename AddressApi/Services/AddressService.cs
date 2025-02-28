@@ -15,39 +15,44 @@ namespace AddressApi.Services
         {
             _logger = logger;
         }
-        public async Task<IEnumerable<Address>> GetAddresses()
-        {            
-            _logger.LogInformation($"Retrieving address");
-
+        public async Task<IEnumerable<Address>> GetAddressesAsync()
+        {
+            _logger.LogInformation($"Retrieving all addresses");
             await Task.Delay(5000);
-            return _addresses;
+            return _addresses.AsEnumerable();
         }
 
-        public async Task<Address?> GetAddress(int addressId)
+        public async Task<Address?> GetAddressAsync(int addressId)
         {
-            var loggingScope = new Dictionary<string, object>
+            using (_logger.BeginScope(new Dictionary<string, object> { ["AddressId"] = addressId }))
             {
-                ["AddressId"] = addressId
-            };
-            using var _ = _logger.BeginScope(loggingScope);
-            _logger.LogInformation($"Retrieving address for the addressId : {addressId}");
+                _logger.LogInformation("Retrieving Address info.");
 
-            await Task.Delay(5000);
-            var address = _addresses.Where(x=>x.AddressId == addressId).FirstOrDefault();
-            return address;
+                await Task.Delay(1000);
+                var address = _addresses.FirstOrDefault(x => x.AddressId == addressId);
+
+                if (address == null)
+                {
+                    _logger.LogWarning("Address not found.");
+                }
+
+                return address;
+            }
         }
 
-        public async Task<Address> CreateAddress(Address address)
+        public async Task<Address> CreateAddressAsync(Address address)
         {
-            var loggingScope = new Dictionary<string, object>
-            {
-                ["UserId"] = address.UserId
-            };
-            using var _ = _logger.BeginScope(loggingScope);
-            _logger.LogInformation($"Created address for the user: {address.UserId}");
+            var maxIdValue = _addresses.Select(x => x.AddressId).AsEnumerable().Distinct().Max();
+            address.AddressId = maxIdValue + 1;
 
-            await Task.Delay(10000);
-            _addresses.Add(address);
+            using (_logger.BeginScope(new Dictionary<string, object> { ["AddressId"] = address.AddressId }))
+            {
+                await Task.Delay(1000);
+                _addresses.Add(address);
+
+                _logger.LogInformation("Address created successfully.");
+            }
+
             return address;
         }
     }

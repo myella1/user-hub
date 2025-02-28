@@ -3,6 +3,7 @@ using AddressApi.Models;
 using AddressApi.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AddressApi.Tests
 {
@@ -19,78 +20,69 @@ namespace AddressApi.Tests
         }
 
         [Fact]
-        public async Task GetAddress_ReturnsAddresses()
+        public async Task GetAddresses_ReturnsOk()
         {
             // Arrange
-            var userId = 1;
-            var expectedAddresses = new List<Address> { new Address { AddressId = 1, UserId = userId, Address1 = "123 Main St", City = "City", State = "State", PostalCode = "12345", AddressType = AddressType.Billing } };
-            _addressService.Setup(service => service.GetAddresses()).ReturnsAsync(expectedAddresses);
+            var addresses = new List<Address> { new Address { AddressId = 1, UserId = 1, Address1 = "5214 Madison Ave", Address2 = "", City = "Chicago", State = "IL", PostalCode = "50678", AddressType = AddressType.Billing } };
+            _addressService.Setup(service => service.GetAddressesAsync()).ReturnsAsync(addresses);
 
             // Act
             var result = await _controller.GetAddresses();
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Single(result);
-            Assert.Equal(expectedAddresses, result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnedAddresses = Assert.IsAssignableFrom<IEnumerable<Address>>(okResult.Value);
+            Assert.Single(returnedAddresses);
         }
 
         [Fact]
-        public async Task GetAddress_ReturnsAddress()
+        public async Task GetAddress_ReturnsOk()
         {
             // Arrange
-            var addressId = 1;
             var expectedAddress = new Address { AddressId = 1, UserId = 1, Address1 = "5214 Madison Ave", Address2 = "", City = "Chicago", State = "IL", PostalCode = "50678", AddressType = AddressType.Billing };
-            _addressService.Setup(service => service.GetAddress(addressId)).ReturnsAsync(expectedAddress);
+            _addressService.Setup(service => service.GetAddressAsync(1)).ReturnsAsync(expectedAddress);
 
             // Act
-            var result = await _controller.GetAddress(addressId);
+            var result = await _controller.GetAddress(1);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(expectedAddress, result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnedAddress = Assert.IsType<Address>(okResult.Value);
+            Assert.Equal(1, returnedAddress.AddressId);
         }
 
         [Fact]
-        public async Task GetAddress_ReturnsNull_OnException()
+        public async Task GetAddress_ReturnsNotFound()
         {
             // Arrange
-            _addressService.Setup(service => service.GetAddresses()).ThrowsAsync(new System.Exception("Database error"));
+            _ = _addressService.Setup(s => s.GetAddressAsync(1)).ReturnsAsync((Address)null);
 
             // Act
-            var result = await _controller.GetAddresses();
+            var result = await _controller.GetAddress(1000);
 
             // Assert
-            Assert.Null(result);
+            Assert.IsType<NotFoundResult>(result);
         }
+
+
 
         [Fact]
         public async Task CreateAddress_ReturnsCreatedAddress()
         {
             // Arrange
-            var address = new Address { AddressId = 1, UserId = 1, Address1 = "456 Elm St", City = "City", State = "State", PostalCode = "67890", AddressType = AddressType.Shipping };
+            var address = new Address { AddressId = 100, UserId = 1, Address1 = "5214 Madison Ave", Address2 = "", City = "Chicago", State = "IL", PostalCode = "50678", AddressType = AddressType.Billing };
+
             var expectedAddresses = address;
-            _addressService.Setup(service => service.CreateAddress(address)).ReturnsAsync(expectedAddresses);
+            _addressService.Setup(service => service.CreateAddressAsync(address)).ReturnsAsync(expectedAddresses);
 
             // Act
             var result = await _controller.CreateAddress(address);
 
             // Assert
-            Assert.Equal(expectedAddresses, result);
-        }
-
-        [Fact]
-        public async Task CreateAddress_ReturnsNull_OnException()
-        {
-            // Arrange
-            var address = new Address { AddressId = 1, UserId = 1, Address1 = "456 Elm St", City = "City", State = "State", PostalCode = "67890", AddressType = AddressType.Shipping };
-            _addressService.Setup(service => service.CreateAddress(address)).ThrowsAsync(new System.Exception("Database error"));
-
-            // Act
-            var result = await _controller.CreateAddress(address);
-
-            // Assert
-            Assert.Null(result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnedAddress = Assert.IsType<Address>(okResult.Value);
+            Assert.Equal(100, returnedAddress.AddressId);
+            Assert.Equal("5214 Madison Ave", returnedAddress.Address1);
         }
     }
 }

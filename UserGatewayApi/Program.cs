@@ -1,12 +1,17 @@
 using UserGatewayApi.Services;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
-
+using UserGatewayApi.Options;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 builder.Services.AddHttpClient<IGatewayService, GatewayService>();
+builder.Services.AddOptions<GatewayServiceOptions>().BindConfiguration("GatewayServiceOptions");
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.Configure<GatewayServiceOptions>(options =>
+                                                    { 
+                                                        var configuration = builder.Configuration.GetSection("GatewayServiceOptions");                                                         
+                                                    });
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowBlazorClient",

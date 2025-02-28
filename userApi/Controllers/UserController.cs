@@ -65,16 +65,16 @@ namespace UserApi.Controllers
 
 
         /// <summary>
-        /// Creates a new user resource.
+        /// Creates user resource.
         /// </summary>
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] User user)
         {
             try
             {
-                await Task.Delay(15000);
+                await Task.Delay(5000);
                 var createdUser = await _userService.CreateUserAsync(user);
-                return CreatedAtAction(nameof(GetUser), new { id = createdUser.UserId }, createdUser);
+                return Ok(user);
             }
             catch (Exception ex)
             {

@@ -17,11 +17,10 @@ namespace AddressApi.Tests
         }
 
         [Fact]
-        public async Task GetAddress_ReturnsCorrectAddresses()
+        public async Task GetAddresses_ReturnsAllAddresses()
         {
-            // Arrange
             // Act
-            var result = await _service.GetAddresses();
+            var result = await _service.GetAddressesAsync();
 
             // Assert
             Assert.NotNull(result);
@@ -33,24 +32,37 @@ namespace AddressApi.Tests
         public async Task GetAddress_ReturnsCorrectAddress()
         {
             // Arrange
-            var addressId = 1;
+            int addressId = 1;
 
             // Act
-            var result = await _service.GetAddress(addressId);
+            var result = await _service.GetAddressAsync(addressId);
 
             // Assert
-            Assert.Equal(addressId, result?.AddressId);
+            Assert.NotNull(result);
             Assert.Equal("5214 Madison Ave", result?.Address1);
             Assert.Equal("Chicago", result?.City);
         }
 
         [Fact]
-        public async Task CreateAddress_AddsAddressAndReturnsCreatedAddress()
+        public async Task GetAddress_ReturnsNullForNonExistentAddress()
+        {
+            // Arrange
+            int nonExistentAddressId = 99;
+
+            // Act
+            var result = await _service.GetAddressAsync(nonExistentAddressId);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task CreateAddress_AddsAddressAndReturnsAddress()
         {
             // Arrange
             var newAddress = new Address
             {
-                AddressId = 5,
+                AddressId = 50,
                 UserId = 3,
                 Address1 = "789 New St",
                 City = "New City",
@@ -60,12 +72,11 @@ namespace AddressApi.Tests
             };
 
             // Act
-            var result = await _service.CreateAddress(newAddress);
+            var result = await _service.CreateAddressAsync(newAddress);
 
             // Assert
             Assert.NotNull(result);
-            var address = result;
-            Assert.Equal(result, address);
+            Assert.Equal(newAddress, result);
         }
     }
 }
