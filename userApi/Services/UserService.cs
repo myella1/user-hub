@@ -44,17 +44,10 @@ namespace UserApi.Services
 
         public async Task<User> CreateUserAsync([FromBody] User user)
         {
-            int newUserId;
-            var existingUserIds = new HashSet<int?>(_users.Select(x => x.UserId));
+            var highestUserId = _users.Select(x => x.UserId).AsEnumerable().Distinct().Max();
+            user.UserId = highestUserId+1;
 
-            do
-            {
-                newUserId = new Random().Next(1, int.MaxValue); 
-            } while (existingUserIds.Contains(newUserId));
-
-            user.UserId = newUserId;
-
-            using (_logger.BeginScope(new Dictionary<string, object> { ["UserId"] = user.UserId }))
+            using (_logger.BeginScope(new Dictionary<string, object> { ["UserId"] = user.UserId! }))
             {
                 await Task.Delay(1000); 
                 _users.Add(user);

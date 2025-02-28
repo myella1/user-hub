@@ -75,8 +75,8 @@ namespace UserApi.Tests
             var result = await _controller.CreateUser(user);
 
             // Assert
-            var createdAtResult = Assert.IsType<CreatedAtActionResult>(result);
-            var returnedUser = Assert.IsType<User>(createdAtResult.Value);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnedUser = Assert.IsType<User>(okResult.Value);
             Assert.Equal(3, returnedUser.UserId);
             Assert.Equal("Mike", returnedUser.FirstName);
         }
