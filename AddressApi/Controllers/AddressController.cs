@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AddressApi.Controllers
 {
     /// <summary>
-    /// Address Controller - Used to retrieve and create Address resource.
+    /// Address Controller - Used to get and create Address resource.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -20,38 +20,45 @@ namespace AddressApi.Controllers
         }
 
         /// <summary>
-        ///Retrieves Addresses using the "Get" pattern.
+        ///Retrieves Address resources using the "Get" pattern.
         /// </summary>
         [HttpGet]
-        public async Task<IEnumerable<Address>?> GetAddresses()
+        public async Task<IActionResult> GetAddresses()
         {
             try
             {
                 await Task.Delay(5000);
-                return await _addressService.GetAddresses();
+                var addresses = await _addressService.GetAddressesAsync();
+                return Ok(addresses);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
-                return null;
+                _logger.LogError(ex, "An error occurred while retrieving addresses.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving addresses.");
             }
         }
 
         /// <summary>
-        ///Retrieves specific address using the "Get" pattern.
+        ///Retrieves specific address resource using the "Get" pattern.
         /// </summary>
-        [HttpGet("{addressId}")]
-        public async Task<Address?> GetAddress(int addressId)
+        [HttpGet("{id}")]
+        public async Task<IActionResult?> GetAddress(int id)
         {
             try
             {
                 await Task.Delay(5000);
-                return await _addressService.GetAddress(addressId);
+                var address = await _addressService.GetAddressAsync(id);
+                if (address == null)
+                {
+                    _logger.LogWarning($"Address with id {id} was not found.");
+                    return NotFound();
+                }
+                return Ok(address);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
-                return null;
+                _logger.LogError(ex, $"An error occurred while retrieving address with id {id}.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving the address.");
             }
         }
 
@@ -59,18 +66,19 @@ namespace AddressApi.Controllers
         ///Creates Address resource using the "POST" pattern.
         /// </summary>
         [HttpPost]
-        public async Task<Address?> CreateAddress([FromBody] Address address)
+        public async Task<IActionResult> CreateAddress([FromBody] Address address)
         {
             try
             {
-                await Task.Delay(10000);
-                return await _addressService.CreateAddress(address);
+                await Task.Delay(5000);
+                var createdAddress = await _addressService.CreateAddressAsync(address);
+                return Ok(address);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
-                return null;
-            }            
+                _logger.LogError(ex, "An error occurred while creating address.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating address.");
+            }        
         }
     }
 }

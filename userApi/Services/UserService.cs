@@ -44,8 +44,8 @@ namespace UserApi.Services
 
         public async Task<User> CreateUserAsync([FromBody] User user)
         {
-            var highestUserId = _users.Select(x => x.UserId).AsEnumerable().Distinct().Max();
-            user.UserId = highestUserId+1;
+            var maxIdValue = _users.Select(x => x.UserId).AsEnumerable().Distinct().Max();
+            user.UserId = maxIdValue + 1;
 
             using (_logger.BeginScope(new Dictionary<string, object> { ["UserId"] = user.UserId! }))
             {
