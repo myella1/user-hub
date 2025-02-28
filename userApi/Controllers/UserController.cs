@@ -28,7 +28,6 @@ namespace UserApi.Controllers
         {
             try
             {
-                await Task.Delay(5000);
                 var users = await _userService.GetUsersAsync();
                 return Ok(users);
             }
@@ -47,7 +46,6 @@ namespace UserApi.Controllers
         {
             try
             {
-                await Task.Delay(5000);
                 var user = await _userService.GetUserAsync(id);
                 if (user == null)
                 {
@@ -72,7 +70,6 @@ namespace UserApi.Controllers
         {
             try
             {
-                await Task.Delay(5000);
                 var createdUser = await _userService.CreateUserAsync(user);
                 return Ok(user);
             }

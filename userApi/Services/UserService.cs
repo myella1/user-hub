@@ -20,7 +20,7 @@ namespace UserApi.Services
         {
             _logger.LogInformation($"Retrieving all users");
 
-            await Task.Delay(500);
+            await Task.Delay(2000);
             return _users.AsEnumerable();
         }
 
@@ -30,7 +30,7 @@ namespace UserApi.Services
             {
                 _logger.LogInformation("Retrieving user info.");
 
-                await Task.Delay(1000);
+                await Task.Delay(2000);
                 var user = _users.FirstOrDefault(x => x.UserId == userId);
 
                 if (user == null)
@@ -49,7 +49,7 @@ namespace UserApi.Services
 
             using (_logger.BeginScope(new Dictionary<string, object> { ["UserId"] = user.UserId! }))
             {
-                await Task.Delay(1000); 
+                await Task.Delay(2000); 
                 _users.Add(user);
 
                 _logger.LogInformation("User created successfully.");

@@ -27,7 +27,6 @@ namespace AddressApi.Controllers
         {
             try
             {
-                await Task.Delay(5000);
                 var addresses = await _addressService.GetAddressesAsync();
                 return Ok(addresses);
             }
@@ -46,7 +45,6 @@ namespace AddressApi.Controllers
         {
             try
             {
-                await Task.Delay(5000);
                 var address = await _addressService.GetAddressAsync(id);
                 if (address == null)
                 {
@@ -70,7 +68,6 @@ namespace AddressApi.Controllers
         {
             try
             {
-                await Task.Delay(5000);
                 var createdAddress = await _addressService.CreateAddressAsync(address);
                 return Ok(address);
             }

@@ -1,0 +1,55 @@
+﻿@page "/users"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using UserApiClient.Models
+@using UserApiClient.Services
+@inject ApiService apiService
+
+
+@if (loading)
+{
+    <p>Loading data...</p>
+}
+else
+{
+<div class="data-grid">
+    <h3>Users:</h3>
+<QuickGrid Items="@usersData">
+            <PropertyColumn Property="@(u => u.UserId)" Class="data-grid td" Title="ID" />
+            <PropertyColumn Property="@(u => u.FirstName)" Class="data-grid td" Title="First Name" />
+            <PropertyColumn Property="@(u => u.LastName)" Class="data-grid td" Title="Last Name" />
+            <PropertyColumn Property="@(u => u.EmailAddress)" Class="data-grid td" Title="Email" />
+</QuickGrid>
+</div>
+<p>
+    &nbsp;
+</p>
+<div class="data-grid">
+    <h3>Addresses:</h3>
+<QuickGrid Items="@addresses">
+    <PropertyColumn Property="@(u => u.Address1)" Title="Address" Align="Align.Left" />
+    <PropertyColumn Property="@(u => u.City)" Title="City" Align="Align.Left"/>
+            <PropertyColumn Property="@(u => u.State)" Title="State" Align="Align.Left" />
+            <PropertyColumn Property="@(u => u.PostalCode)" Title="Postal Code" Align="Align.Left" />
+</QuickGrid></div>
+}
+
+@code {
+    bool loading = true;
+    IQueryable<User>? usersData;
+    IQueryable<Address>? addresses;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        loading = true;
+        var result = await apiService.GetDataAsync();
+        usersData = result.Users?.AsQueryable();
+        addresses = result.Addresses?.AsQueryable();
+        loading = false;
+    }
+}
+
