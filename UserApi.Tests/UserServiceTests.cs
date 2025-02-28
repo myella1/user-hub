@@ -20,7 +20,7 @@ namespace UserApi.Tests
         public async Task GetUsers_ReturnsAllUsers()
         {
             // Act
-            var result = await _service.GetUsers();
+            var result = await _service.GetUsersAsync();
 
             // Assert
             Assert.NotNull(result);
@@ -35,12 +35,12 @@ namespace UserApi.Tests
             int userId = 1;
 
             // Act
-            var result = await _service.GetUser(userId);
+            var result = await _service.GetUserAsync(userId);
 
             // Assert
-            Assert.Equal(userId, result.UserId);
-            Assert.Equal("Mike", result.FirstName);
-            Assert.Equal("Smith", result.LastName);
+            Assert.NotNull(result); 
+            Assert.Equal("Mike", result?.FirstName);
+            Assert.Equal("Smith", result?.LastName);
         }
 
         [Fact]
@@ -50,14 +50,14 @@ namespace UserApi.Tests
             int nonExistentUserId = 99;
 
             // Act
-            var result = await _service.GetUser(nonExistentUserId);
+            var result = await _service.GetUserAsync(nonExistentUserId);
 
             // Assert
             Assert.Null(result);
         }
 
         [Fact]
-        public async Task CreateUser_AddsUserAndReturnsAllUsers()
+        public async Task CreateUser_AddsUserAndReturnsUser()
         {
             // Arrange
             var newUser = new User
@@ -70,7 +70,7 @@ namespace UserApi.Tests
             };
 
             // Act
-            var result = await _service.CreateUser(newUser);
+            var result = await _service.CreateUserAsync(newUser);
 
             // Assert
             Assert.NotNull(result);

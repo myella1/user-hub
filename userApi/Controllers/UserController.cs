@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using UserApi.Models;
 using UserApi.Services;
 
@@ -25,17 +24,18 @@ namespace UserApi.Controllers
         ///Retrieves all the users using the "Get" pattern.
         /// </summary>
         [HttpGet]
-        public async Task<IEnumerable<User>?> GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
             try
             {
-                await Task.Delay(500);
-                return await _userService.GetUsers();
+                await Task.Delay(5000);
+                var users = await _userService.GetUsersAsync();
+                return Ok(users);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
-                return null;
+                _logger.LogError(ex, "An error occurred while retrieving users.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving users.");
             }
         }
 
@@ -43,35 +43,43 @@ namespace UserApi.Controllers
         ///Retrieves specific user by the user id using the "Get" pattern.
         /// </summary>
         [HttpGet("{id}")]
-        public async Task<User?> GetUser(int id)
+        public async Task<IActionResult> GetUser(int id)
         {
             try
             {
                 await Task.Delay(5000);
-                return await _userService.GetUser(id);
+                var user = await _userService.GetUserAsync(id);
+                if (user == null)
+                {
+                    _logger.LogWarning($"User with id {id} was not found.");
+                    return NotFound();
+                }
+                return Ok(user);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
-                return null;
-            }
+                _logger.LogError(ex, $"An error occurred while retrieving user with id {id}.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while retrieving the user.");
+            } 
         }
 
+
         /// <summary>
-        ///Creates user resource using the "POST" pattern.
+        /// Creates a new user resource.
         /// </summary>
         [HttpPost]
-        public async Task<User?> CreateUser([FromBody] User user)
+        public async Task<IActionResult> CreateUser([FromBody] User user)
         {
             try
             {
                 await Task.Delay(15000);
-                return await _userService.CreateUser(user);
+                var createdUser = await _userService.CreateUserAsync(user);
+                return CreatedAtAction(nameof(GetUser), new { id = createdUser.UserId }, createdUser);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
-                return null;
+                _logger.LogError(ex, "An error occurred while creating a new user.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the user.");
             }
         }
     }

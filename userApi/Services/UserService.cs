@@ -15,39 +15,55 @@ namespace UserApi.Services
         {
             _logger = logger;
         }
-        public async Task<IEnumerable<User>> GetUsers()
+
+        public async Task<IEnumerable<User>> GetUsersAsync()
         {
-            _logger.LogInformation($"Retrieving all the users");
+            _logger.LogInformation($"Retrieving all users");
 
             await Task.Delay(500);
             return _users.AsEnumerable();
         }
-        public async Task<User> GetUser(int userId)
-        {
-            var loggingScope = new Dictionary<string, object>
-            {
-                ["UserId"] = userId
-            };
-            using var _ = _logger.BeginScope(loggingScope);
-            _logger.LogInformation($"Retrieving user info for user: {userId}");
 
-            await Task.Delay(1000);
-            var user = _users.Where(x => x.UserId == userId).FirstOrDefault();
-            return user!;
+        public async Task<User?> GetUserAsync(int userId)
+        {
+            using (_logger.BeginScope(new Dictionary<string, object> { ["UserId"] = userId }))
+            {
+                _logger.LogInformation("Retrieving user info.");
+
+                await Task.Delay(1000);
+                var user = _users.FirstOrDefault(x => x.UserId == userId);
+
+                if (user == null)
+                {
+                    _logger.LogWarning("User not found.");
+                }
+
+                return user;
+            }
         }
-        public async Task<User> CreateUser([FromBody] User user)
-        {
-            var loggingScope = new Dictionary<string, object>
-            {
-                ["UserId"] = user.UserId
-            };
-            using var _ = _logger.BeginScope(loggingScope);
-            _logger.LogInformation($"Created user : {user.UserId}");
 
-            await Task.Delay(1000);
-            _users.Add(user);
+        public async Task<User> CreateUserAsync([FromBody] User user)
+        {
+            int newUserId;
+            var existingUserIds = new HashSet<int?>(_users.Select(x => x.UserId));
+
+            do
+            {
+                newUserId = new Random().Next(1, int.MaxValue); 
+            } while (existingUserIds.Contains(newUserId));
+
+            user.UserId = newUserId;
+
+            using (_logger.BeginScope(new Dictionary<string, object> { ["UserId"] = user.UserId }))
+            {
+                await Task.Delay(1000); 
+                _users.Add(user);
+
+                _logger.LogInformation("User created successfully.");
+            }
 
             return user;
         }
     }
 }
+

@@ -3,6 +3,7 @@ using Moq;
 using UserApi.Models;
 using UserApi.Controllers;
 using UserApi.Services;
+using Microsoft.AspNetCore.Mvc;
 namespace UserApi.Tests
 {
     public class UserControllerTests
@@ -18,51 +19,66 @@ namespace UserApi.Tests
         }
 
         [Fact]
-        public async Task GetUsers_ReturnsUsers()
+        public async Task GetUsers_ReturnsOk()
         {
             // Arrange
-            var expectedUsers = new List<User> { new User { UserId = 1, FirstName = "Ashley", LastName = "Joy", EmailAddress = "ashley.joy@gmail.com" } };
-            _userService.Setup(service => service.GetUsers()).ReturnsAsync(expectedUsers);
+            var users = new List<User> { new User { UserId = 1, FirstName = "Ashley", LastName = "Joy", EmailAddress = "ashley.joy@gmail.com" } };
+            _userService.Setup(service => service.GetUsersAsync()).ReturnsAsync(users);
 
             // Act
             var result = await _controller.GetUsers();
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Single(result);
-            Assert.Equal(expectedUsers, result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnedUsers = Assert.IsAssignableFrom<IEnumerable<User>>(okResult.Value);
+            Assert.Single(returnedUsers);
         }
 
         [Fact]
-        public async Task GetUserById_ReturnsUser()
+        public async Task GetUser_ReturnsOk()
         {
             // Arrange
-            int userId = 1;
-            var expectedUser = new User { UserId = userId, FirstName = "John", LastName = "Doe", EmailAddress = "john.doe@example.com" };
-            _userService.Setup(service => service.GetUser(userId)).ReturnsAsync(expectedUser);
+            var user = new User { UserId = 1, FirstName = "Mike", LastName = "Smith", MiddleName = "N", EmailAddress = "MikeSmith@gmail.com" };
+            _userService.Setup(s => s.GetUserAsync(1)).ReturnsAsync(user);
 
             // Act
-            var result = await _controller.GetUser(userId);
+            var result = await _controller.GetUser(1);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(expectedUser, result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnedUser = Assert.IsType<User>(okResult.Value);
+            Assert.Equal(1, returnedUser.UserId);
+        }
+
+        [Fact]
+        public async Task GetUser_ReturnsNotFound()
+        {
+            // Arrange
+            _ = _userService.Setup(s => s.GetUserAsync(1)).ReturnsAsync((User)null);
+
+            // Act
+            var result = await _controller.GetUser(100);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
         public async Task CreateUser_ReturnsCreatedUser()
         {
             // Arrange
-            var user = new User { UserId = 1, FirstName = "Jane", LastName = "Doe", EmailAddress = "jane.doe@example.com" };
+            var user = new User { UserId = 3, FirstName = "Mike", LastName = "Smith", MiddleName = "N", EmailAddress = "MikeSmith@gmail.com" };
             var expectedUsers = user;
-            _userService.Setup(service => service.CreateUser(user)).ReturnsAsync(expectedUsers);
+            _userService.Setup(service => service.CreateUserAsync(user)).ReturnsAsync(expectedUsers);
 
             // Act
             var result = await _controller.CreateUser(user);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(expectedUsers, result);
+            var createdAtResult = Assert.IsType<CreatedAtActionResult>(result);
+            var returnedUser = Assert.IsType<User>(createdAtResult.Value);
+            Assert.Equal(3, returnedUser.UserId);
+            Assert.Equal("Mike", returnedUser.FirstName);
         }
     }
 }
